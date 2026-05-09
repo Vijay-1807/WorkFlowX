@@ -15,7 +15,23 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 app.use(cors({
-  origin: ['https://workflowx-teal.vercel.app', 'https://workflowx.vercel.app', 'http://localhost:5173'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'https://workflowx-teal.vercel.app',
+      'https://workflowx.vercel.app',
+      'http://localhost:5173'
+    ];
+    
+    // Check if origin is in allowedOrigins or matches vercel preview deployment patterns
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app') || origin.includes('workflowx-') && origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
