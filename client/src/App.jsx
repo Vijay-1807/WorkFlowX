@@ -33,7 +33,7 @@ const AuthLayout = () => {
   if (user) return <Navigate to="/dashboard" />;
 
   return (
-    <div className="app-container" style={{ minHeight: '100vh', overflowY: 'auto' }}>
+    <div className="app-container" style={{ height: '100vh', overflow: 'hidden' }}>
       <nav className="navbar glass-panel">
         <div className="nav-brand">
           <h1>WorkFlowX</h1>
@@ -41,11 +41,11 @@ const AuthLayout = () => {
         <ThemeToggle />
       </nav>
 
-      <main className="main-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 80px)', padding: '40px 0' }}>
+      <main className="main-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 'calc(100vh - 80px)', overflow: 'hidden' }}>
         <div className="hero-section animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '1000px', gap: '40px' }}>
 
           {/* Centered Text */}
-          <div className="hero-text-centered" style={{ textAlign: 'center', width: '100%', maxWidth: '900px', marginTop: '20px', paddingBottom: '32px' }}>
+          <div className="hero-text-centered" style={{ textAlign: 'center', width: '100%', maxWidth: '900px', marginTop: '-20px', paddingBottom: '10px' }}>
             <h2 style={{ fontSize: '3.2rem', fontWeight: 800, marginBottom: '16px', color: 'var(--text-primary)', lineHeight: 1.15, letterSpacing: '-1px' }}>
               Streamline Your <span style={{ color: 'var(--primary-color)' }}>Workflow</span>
             </h2>
