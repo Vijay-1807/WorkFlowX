@@ -45,7 +45,7 @@ const AuthLayout = () => {
         <div className="hero-section animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '1000px', gap: '40px' }}>
 
           {/* Centered Text */}
-          <div className="hero-text-centered" style={{ textAlign: 'center', width: '100%', maxWidth: '900px', marginTop: '0' }}>
+          <div className="hero-text-centered" style={{ textAlign: 'center', width: '100%', maxWidth: '900px', marginTop: '0', paddingBottom: '16px' }}>
             <h2 style={{ fontSize: '3.2rem', fontWeight: 800, marginBottom: '16px', color: 'var(--text-primary)', lineHeight: 1.15, letterSpacing: '-1px' }}>
               Streamline Your <span style={{ color: 'var(--primary-color)' }}>Workflow</span>
             </h2>
