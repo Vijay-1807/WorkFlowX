@@ -1,51 +1,95 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Plus, Trash2, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { api } from '../../context/AuthContext';
+import { debounce } from 'lodash';
 
 const Notes = () => {
   const [notes, setNotes] = useState([]);
   const [activeNoteId, setActiveNoteId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const fetchNotes = async () => {
+    try {
+      const res = await api.get('/notes');
+      setNotes(res.data);
+      if (res.data.length > 0 && !activeNoteId) {
+        setActiveNoteId(res.data[0].id);
+      }
+    } catch (error) {
+      toast.error('Failed to fetch notes');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const savedNotes = JSON.parse(localStorage.getItem('workflowx_notes') || '[]');
-    setNotes(savedNotes);
-    if (savedNotes.length > 0) setActiveNoteId(savedNotes[0].id);
+    fetchNotes();
   }, []);
 
-  const saveNotes = (updatedNotes) => {
-    setNotes(updatedNotes);
-    localStorage.setItem('workflowx_notes', JSON.stringify(updatedNotes));
+  const createNote = async () => {
+    try {
+      const res = await api.post('/notes');
+      setNotes([res.data, ...notes]);
+      setActiveNoteId(res.data.id);
+    } catch (error) {
+      toast.error('Failed to create note');
+    }
   };
 
-  const createNote = () => {
-    const newNote = {
-      id: Date.now().toString(),
-      title: 'New Note',
-      content: '',
-      updatedAt: new Date().toISOString()
-    };
-    const updated = [newNote, ...notes];
-    saveNotes(updated);
-    setActiveNoteId(newNote.id);
+  const updateNoteAPI = async (id, data) => {
+    setSaving(true);
+    try {
+      await api.put(`/notes/${id}`, data);
+    } catch (error) {
+      toast.error('Failed to save note');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  // Debounced update to avoid too many API calls
+  const debouncedUpdate = useCallback(
+    debounce((id, data) => updateNoteAPI(id, data), 1000),
+    []
+  );
 
   const updateActiveNote = (field, value) => {
     const updated = notes.map(n => 
       n.id === activeNoteId ? { ...n, [field]: value, updatedAt: new Date().toISOString() } : n
     );
-    saveNotes(updated);
+    setNotes(updated);
+    
+    const noteToUpdate = updated.find(n => n.id === activeNoteId);
+    if (noteToUpdate) {
+      debouncedUpdate(activeNoteId, { [field]: value });
+    }
   };
 
-  const deleteNote = (id) => {
-    const updated = notes.filter(n => n.id !== id);
-    saveNotes(updated);
-    if (activeNoteId === id) {
-      setActiveNoteId(updated.length > 0 ? updated[0].id : null);
+  const deleteNote = async (id) => {
+    try {
+      await api.delete(`/notes/${id}`);
+      const updated = notes.filter(n => n.id !== id);
+      setNotes(updated);
+      if (activeNoteId === id) {
+        setActiveNoteId(updated.length > 0 ? updated[0].id : null);
+      }
+      toast.success('Note deleted');
+    } catch (error) {
+      toast.error('Failed to delete note');
     }
-    toast.success('Note deleted');
   };
 
   const activeNote = notes.find(n => n.id === activeNoteId);
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-secondary)' }}>
+        <Loader2 className="animate-spin" size={32} />
+      </div>
+    );
+  }
 
   return (
     <div style={{ display: 'flex', height: '100%', backgroundColor: 'var(--bg-color)', borderRadius: '12px', border: '1px solid var(--border-color)', overflow: 'hidden' }}>
@@ -81,13 +125,16 @@ const Notes = () => {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-color)' }}>
         {activeNote ? (
           <>
-            <input 
-              type="text" 
-              value={activeNote.title} 
-              onChange={e => updateActiveNote('title', e.target.value)}
-              placeholder="Note Title"
-              style={{ padding: '24px', fontSize: '1.5rem', fontWeight: 700, border: 'none', borderBottom: '1px solid var(--border-color)', background: 'transparent', color: 'var(--text-primary)', outline: 'none' }}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid var(--border-color)', paddingRight: '24px' }}>
+              <input 
+                type="text" 
+                value={activeNote.title} 
+                onChange={e => updateActiveNote('title', e.target.value)}
+                placeholder="Note Title"
+                style={{ flex: 1, padding: '24px', fontSize: '1.5rem', fontWeight: 700, border: 'none', background: 'transparent', color: 'var(--text-primary)', outline: 'none' }}
+              />
+              {saving && <Loader2 className="animate-spin text-secondary" size={16} />}
+            </div>
             <textarea 
               value={activeNote.content}
               onChange={e => updateActiveNote('content', e.target.value)}

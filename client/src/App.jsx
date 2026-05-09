@@ -42,11 +42,11 @@ const AuthLayout = () => {
       </nav>
 
       <main className="main-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 'calc(100vh - 80px)', overflow: 'hidden' }}>
-        <div className="hero-section animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '1000px', gap: '20px' }}>
+        <div className="hero-section animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '1000px', gap: '10px' }}>
 
           {/* Centered Text */}
           <div className="hero-text-centered" style={{ textAlign: 'center', width: '100%', maxWidth: '900px', marginTop: '10px', paddingBottom: '0' }}>
-            <h2 style={{ fontSize: '2.8rem', fontWeight: 800, marginBottom: '10px', color: 'var(--text-primary)', lineHeight: 1.15, letterSpacing: '-1px' }}>
+            <h2 style={{ fontSize: '2.4rem', fontWeight: 800, marginBottom: '8px', color: 'var(--text-primary)', lineHeight: 1.15, letterSpacing: '-1px' }}>
               Streamline Your <span style={{ color: 'var(--primary-color)' }}>Workflow</span>
             </h2>
             <p className="subtitle" style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
