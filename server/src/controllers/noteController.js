@@ -2,7 +2,7 @@ const Note = require('../models/Note');
 
 exports.getNotes = async (req, res) => {
   try {
-    const notes = await Note.find({ user: req.user._id }).sort({ updatedAt: -1 });
+    const notes = await Note.find({ user: req.user.userId }).sort({ updatedAt: -1 });
     res.json(notes);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -12,7 +12,7 @@ exports.getNotes = async (req, res) => {
 exports.createNote = async (req, res) => {
   try {
     const note = await Note.create({
-      user: req.user._id,
+      user: req.user.userId,
       title: 'New Note',
       content: ''
     });
@@ -25,7 +25,7 @@ exports.createNote = async (req, res) => {
 exports.updateNote = async (req, res) => {
   try {
     const note = await Note.findOneAndUpdate(
-      { _id: req.params.id, user: req.user._id },
+      { _id: req.params.id, user: req.user.userId },
       req.body,
       { new: true }
     );
@@ -38,7 +38,7 @@ exports.updateNote = async (req, res) => {
 
 exports.deleteNote = async (req, res) => {
   try {
-    const note = await Note.findOneAndDelete({ _id: req.params.id, user: req.user._id });
+    const note = await Note.findOneAndDelete({ _id: req.params.id, user: req.user.userId });
     if (!note) return res.status(404).json({ error: 'Note not found' });
     res.json({ message: 'Note deleted' });
   } catch (error) {
