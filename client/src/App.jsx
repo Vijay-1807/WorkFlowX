@@ -33,7 +33,7 @@ const AuthLayout = () => {
   if (user) return <Navigate to="/dashboard" />;
 
   return (
-    <div className="app-container" style={{ height: '100vh', overflow: 'hidden' }}>
+    <div className="app-container" style={{ minHeight: '100vh', overflowY: 'auto' }}>
       <nav className="navbar glass-panel">
         <div className="nav-brand">
           <h1>WorkFlowX</h1>
@@ -41,7 +41,7 @@ const AuthLayout = () => {
         <ThemeToggle />
       </nav>
 
-      <main className="main-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 'calc(100vh - 80px)', overflow: 'hidden' }}>
+      <main className="main-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 80px)', padding: '20px 0' }}>
         <div className="hero-section animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '1000px', gap: '10px' }}>
 
           {/* Centered Text */}

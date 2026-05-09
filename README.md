@@ -51,7 +51,7 @@ A premium, production-ready project management tool built with **React**, **Node
 - Inline field validation with red borders
 - Google Font Inter typography
 - Settings page (Edit Profile, Change Password, Theme, Notifications)
-- Notes section with localStorage persistence
+- Notes section with full MongoDB persistence and debounced auto-save
 
 ---
 
@@ -83,8 +83,8 @@ Ethara Ai/
 │   ├── src/
 │   │   ├── controllers/       # authController, projectController, taskController, userController
 │   │   ├── middleware/        # authMiddleware (protect, adminOnly)
-│   │   ├── models/            # User, Project, Task (Mongoose schemas)
-│   │   ├── routes/            # authRoutes, projectRoutes, taskRoutes, userRoutes
+│   │   ├── models/            # User, Project, Task, Note (Mongoose schemas)
+│   │   ├── routes/            # authRoutes, projectRoutes, taskRoutes, userRoutes, noteRoutes
 │   │   ├── lib/               # db.js (MongoDB), cloudinary.js (file upload config)
 │   │   ├── utils/             # sendEmail.js (Nodemailer)
 │   │   └── index.js           # Express server entry
@@ -117,6 +117,10 @@ Ethara Ai/
 | PUT | `/api/tasks/:id` | ✅ | Update task |
 | DELETE | `/api/tasks/:id` | ✅ | Delete task |
 | POST | `/api/tasks/:id/attachment` | ✅ | Upload file to Cloudinary |
+| GET | `/api/notes` | ✅ | List user's notes |
+| POST | `/api/notes` | ✅ | Create new note |
+| PUT | `/api/notes/:id` | ✅ | Update note (auto-save) |
+| DELETE | `/api/notes/:id` | ✅ | Delete note |
 
 ---
 
