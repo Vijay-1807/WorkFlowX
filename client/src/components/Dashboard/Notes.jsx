@@ -2,7 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Trash2, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '../../context/AuthContext';
-import { debounce } from 'lodash';
+
+// Simple debounce function to avoid lodash dependency
+const customDebounce = (func, wait) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+};
 
 const Notes = () => {
   const [notes, setNotes] = useState([]);
@@ -51,7 +59,7 @@ const Notes = () => {
 
   // Debounced update to avoid too many API calls
   const debouncedUpdate = useCallback(
-    debounce((id, data) => updateNoteAPI(id, data), 1000),
+    customDebounce((id, data) => updateNoteAPI(id, data), 1000),
     []
   );
 
